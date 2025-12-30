@@ -166,7 +166,7 @@
                 } else {
                     btnNext.classList.remove('hidden');
                     btnNext.innerHTML = state.step === steps.length - 2 ? 
-                        '生成戰略報導 <i class="fa-solid fa-newspaper ml-2"></i>' : 
+                        '生成戰略書 <i class="fa-solid fa-wand-magic-sparkles ml-2"></i>' : 
                         '下一步 <i class="fa-solid fa-arrow-right ml-2"></i>';
                 }
 
@@ -409,7 +409,7 @@
                 const div = document.createElement('div');
                 div.className = 'slide-in-right h-full flex flex-col';
                 div.innerHTML = `
-                    <h2 class="text-2xl font-bold text-stone-800 text-center mb-4">你的年度報導指令已就緒</h2>
+                    <h2 class="text-2xl font-bold text-stone-800 text-center mb-4">你的年度戰略書已就緒</h2>
                     <div class="flex-1 relative bg-stone-900 rounded-lg p-4 overflow-hidden group">
                         <textarea id="final-prompt" readonly class="w-full h-full bg-transparent text-stone-300 font-mono text-xs md:text-sm resize-none focus:outline-none custom-scrollbar">${prompt}</textarea>
                         <button id="btn-copy" class="absolute top-4 right-4 bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded shadow flex items-center transition-all">
@@ -476,7 +476,68 @@
             }
 
             function generatePrompt() {
-                return `# Role\n你現在是一位國際知名雜誌《LIFE 2025》的**資深總編輯與特約人物記者**。\n\n# Task\n請根據我提供的 **【2025 年度覆盤數據】** 以及我抽到的 **【2026 戰略關鍵字：${state.data.card.cn}】**，為我撰寫一篇**深度人物專訪特刊報導**。\n\n請使用 **繁體中文**，風格需具備**新聞報導的專業感、雜誌專欄的敘事張力**，並帶有激勵人心的觀點。請避免像填空題一樣的條列式回答，而是要像在寫一篇關於我的封面故事。\n\n---\n# Data Source (採訪筆記)\n**1. 年度定調：**\n* 關鍵字：${state.data.keyword}\n* 能量指數：事業(${state.data.scores[0]}) / 身心(${state.data.scores[1]}) / 關係(${state.data.scores[2]}) / 財務(${state.data.scores[3]}) / 自我(${state.data.scores[4]})\n\n**2. 時間軸追蹤：**\n* Q1: ${state.data.q1}\n* Q2: ${state.data.q2}\n* Q3: ${state.data.q3}\n* Q4: ${state.data.q4}\n\n**3. 角色深度對話：**\n* ${state.data.roles[0].name}: ${state.data.roles[0].review}\n* ${state.data.roles[1].name}: ${state.data.roles[1].review}\n* ${state.data.roles[2].name}: ${state.data.roles[2].review}\n\n**4. 成就盤點：**\n* 關鍵數據: ${state.data.metrics}\n* 英雄時刻: ${state.data.highlights}\n* 隱形資產: ${state.data.assets}\n\n**5. 未來願景：**\n${state.data.vision}\n\n**6. ✨ 2026 戰略指引：**\n* 關鍵字：**${state.data.card.cn} (${state.data.card.en})**\n* 核心精神：${state.data.card.msg}\n\n---\n# Article Structure (請依照此雜誌版面架構撰寫)\n\n## 1. 🌟【封面故事】2025 年度人物特刊：${state.data.keyword} 之年\n* **編輯台手記：** 結合年度關鍵字與五維度評分，以總編輯的角度，為這位主角（我）的 2025 年下一個精闢的註解。\n\n## 2. 📅【季度追蹤】從春生到冬藏：轉折與突破\n* 以時間軸為經緯，像說故事一樣敘述主角在 Q1-Q4 經歷的挑戰與心境轉折。請將數據與事件融入敘事中。\n\n## 3. 🎭【深度專訪】多重宇宙下的對話\n* **角色切換的藝術：** 針對主角扮演的不同角色（${state.data.roles[0].name}...），分析他在這些身份中獲得的成就感與面臨的挑戰。請用報導的語氣（例如：「在 ${state.data.roles[0].name} 這個角色上，他展現了...」）。\n\n## 4. 📊【關鍵數據看板】數字背後的故事\n* **年度成績單：** 整理關鍵數據與英雄時刻，並點評這些「顯性成就」背後所累積的「隱形資產」（心態、習慣、人脈）。\n\n## 5. 🔭【2026 趨勢預測】下一個里程碑\n* **未來展望：** 描述主角眼中的 2026 願景畫面。\n* **戰略關鍵字解讀：** 針對抽到的「${state.data.card.cn}」，雜誌編輯部給予主角什麼樣的行動建議？如何在明年具體實踐這個關鍵字？\n\n## 6. 🎨 【視覺企劃】(AI Image Prompts)\n請生成兩組 **英文** Image Prompts，並附上中文設計思路。\n**重要提示：** 請指示繪圖 AI 盡量使用圖像、圖標和抽象元素來表達資訊，**避免在圖中渲染複雜的文字或數據標籤**，以免產生亂碼。\n\n* **[Prompt 1: 2025 年度回顧資訊圖表]**:\n    * 設計思路：請設計一張雜誌內頁風格的資訊圖表 (Infographic)，視覺化呈現 Q1-Q4 的旅程流動、關鍵數據亮點，以及雷達圖的能量分佈。反映我的年度關鍵字：${state.data.keyword}。\n    * 風格：Magazine editorial layout, clean data visualization, minimal text, warm earth tones.\n* **[Prompt 2: 2026 願景封面拼貼]**:\n    * 設計思路：將主角的願景畫面與「${state.data.card.en}」的象徵元素結合，設計一張如同時尚雜誌封面的電腦桌布。\n    * 風格：High-fashion magazine cover style, artistic collage, inspiring and photorealistic.`;
+                // 定義變數以符合你的 Prompt Template 需求
+                const d = state.data;
+                const c = state.data.card;
+                const r = state.data.roles;
+                const s = state.data.scores;
+
+                return `
+# Role
+你是一位溫暖、富有洞見的人生戰略顧問與年度覆盤專家。
+
+# Task
+請根據我填寫的 **【2025 年度覆盤】** 以及我抽到的 **【2026 戰略關鍵字：${c.cn}】**，為我撰寫一份深度年度總結報告。
+請使用 **繁體中文**，語氣專業、清晰且激勵人心，並使用 Markdown 格式。
+
+---
+# Context (使用者數據)
+* 年度定調：關鍵字「${d.keyword || '未定義'}」, 評分(事業${s[0]}/身心${s[1]}/關係${s[2]}/財務${s[3]}/自我${s[4]})
+* 四季回放：
+  - Q1: ${d.q1 || '無'}
+  - Q2: ${d.q2 || '無'}
+  - Q3: ${d.q3 || '無'}
+  - Q4: ${d.q4 || '無'}
+* 角色回顧：
+  - 角色1(${r[0].name || '未定義'}:${r[0].review || '無'})
+  - 角色2(${r[1].name || '未定義'}:${r[1].review || '無'})
+  - 角色3(${r[2].name || '未定義'}:${r[2].review || '無'})
+* 深度盤點：
+  - 關鍵數據[${d.metrics || '無'}]
+  - 高光[${d.highlights || '無'}]
+  - 隱形資產[${d.assets || '無'}]
+* 未來願景：${d.vision || '未填寫'}
+* ✨ 2026 戰略關鍵字：**${c.cn} (${c.en})**
+* 行動準則：${c.msg}
+
+---
+# Output Structure (請依照此架構產出)
+
+## 1. 🦋 2025 年度總結
+* **年度定調：** 結合關鍵字與五維度評分，分析今年的整體基調。
+
+## 2. 🏆 高光與數據分析
+* **成就是如何發生的：** 分析高光時刻與數據背後的關鍵行動。
+* **角色成長：** 針對不同角色(${r[0].name || '角色1'}...)的轉變進行點評。
+
+## 3. 🧩 隱形資產盤點
+* **內在累積：** 分析那些無法被量化，但對未來至關重要的經驗與心態。
+
+## 4. 💌 2026 戰略規劃
+* **給未來的信：** 結合願景寫一段話。
+* **關鍵字戰略解讀：** 請針對我抽到的「${c.cn}」，結合我的願景「${d.vision}」，提供 **3 個具體的行動建議**。告訴我明年若要實踐這個關鍵字，我應該專注什麼？或避免什麼？
+
+## 5. 🎨 AI 視覺化指令 (Bonus)
+請生成兩組 **英文** Image Prompts，並附上中文設計思路。
+**重要提示：** 請指示繪圖 AI 盡量使用圖像、圖標和抽象元素來表達資訊，**避免在圖中渲染複雜的文字或數據標籤**，以免產生亂碼。
+
+* **[Prompt 1: 2025 年度深度專題報導 (Annual Reportage Cover Story)]**: 
+    * 設計思路：請設計一張《時代雜誌》或高級商業期刊風格的封面圖，作為我 2025 年生命報導的總結。畫面應包含代表性的人像或象徵物（反映我的關鍵字：${d.keyword}），並展現四季流轉的敘事感。
+    * 風格：Editorial magazine cover, professional photography, cinematic lighting, evocative and storytelling atmosphere, warm earth tones, high-end journalism style.
+* **[Prompt 2: 2026 願景拼貼]**: 
+    * 設計思路：將我的願景畫面與「${c.en}」的象徵元素結合，設計一張激勵人心的電腦桌布。
+    * 風格：Desktop wallpaper, mood board style, aesthetic and inspiring, photorealistic elements.
+`;
             }
 
         });
